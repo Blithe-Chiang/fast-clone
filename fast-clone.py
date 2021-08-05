@@ -10,13 +10,13 @@ CLONE_FAILED = 3
 REPO_NOT_EXISTS = 4
 
 USAGE_STR = """
-fast-clone 
+fasterclone 
 =================
 usage: 
-  fast-clone <github-repo-url>
+  fasterclone <github-repo-url>
   
 how:
-  fast-clone <github-repo-url>
+  fasterclone <github-repo-url>
       translated to 
     ================> 
   git clone <replaced-repo-url>
