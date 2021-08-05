@@ -81,7 +81,7 @@ def main():
   clone(replaced_url)
 
   print('restoring...')
-  restore(replaced_url, repo_url )
+  restore(replaced_url, repo_url)
 
 if __name__ == '__main__':
   main()
