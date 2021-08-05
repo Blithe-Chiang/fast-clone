@@ -17,7 +17,7 @@ fasterclone GITHUB-REPO-URL
 
 $ ./fasterclone.py https://github.com/Blithe-Chiang/breakfast.git  
 
-这行命令会执行 `git clone` https://gitclone.com/github.com/Blithe-Chiang/breakfast.git ，将下载源从github换成gitclone，因为gitclone的源下载速度会快很多。
+这行命令会执行 `git clone` https://github.com.cnpmjs.org/Blithe-Chiang/breakfast.git ，将下载源从github.com换成github.com.cnpmjs.org，因为gitclone的源下载速度会快很多。
 
 当`git clone`完成之后，通过直接修改配置文件中的配置信息，恢复项目原来的源。
 

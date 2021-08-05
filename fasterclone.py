@@ -39,10 +39,9 @@ def get_repo_url():
 
 # get replaced url 
 def get_replaced_url(github_repo_url):
-  try:
-    idx = github_repo_url.index('github.com')
-    replaced_repo_url = github_repo_url[:idx]+'gitclone.com/'+github_repo_url[idx:]
-  except ValueError:
+  if 'https://github.com' in github_repo_url:
+    replaced_repo_url = github_repo_url.replace('github.com', 'github.com.cnpmjs.org')
+  else:
     print('github repo url format error')
     exit(URL_FORMAT_ERROR)
   return replaced_repo_url
