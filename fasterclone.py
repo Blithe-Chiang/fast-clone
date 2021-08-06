@@ -15,14 +15,6 @@ fasterclone
 usage: 
   fasterclone <github-repo-url>
   
-how:
-  fasterclone <github-repo-url>
-      translated to 
-    ================> 
-  git clone <replaced-repo-url>
-      when clone done
-    ================> 
-  restore <replaced-repo-url> with original <github-repo-url> in `<repo-dir>/.git/config`
 """
 
 def usage():

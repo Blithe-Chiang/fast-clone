@@ -22,6 +22,3 @@ $ ./fasterclone.py https://github.com/Blithe-Chiang/breakfast.git
 ### how 
 
 It will perform `git clone` https://github.com.cnpmjs.org/Blithe-Chiang/breakfast.git since using this URL will be **faster** than the original URL in China Mainland. 
-
-When the cloning is completed, restore the original url in `breakfast/.git/config` (breakfast is the repo name).
-
