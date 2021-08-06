@@ -50,28 +50,29 @@ def clone(args):
   if proc.returncode != 0:
     exit(CLONE_FAILED)
 
-# restore original url in .git/config file
-def restore(url, original_url):
+def get_repo_dir(args, url):
   # get repo name
   # e.g. parse `breakfast` from  https://github.com/Blithe-Chiang/breakfast.git 
-  repo_dir = original_url[original_url.rindex('/')+1:-4]
+  repo_dir = url[url.rindex('/')+1:-4] # default 
+  idx = args.index(url)
 
-  if not os.path.isdir(repo_dir):
-    exit(REPO_NOT_EXISTS)
+  try:
+    # from git-clone manual
+    # syntax: git clone <repository> [<directory>]
+    repo_dir = args[idx+1] # try to get specified directory
+  except IndexError:
+    pass
 
+  return repo_dir
+
+# restore original upstream
+def restore(repo_dir, original_url):
   print('restoring...')
 
-  filename = f'{repo_dir}/.git/config'
+  os.chdir(repo_dir)
 
-  with open(filename, 'r') as f:
-    lines = f.readlines()
-  
-  # restoring original url
-  lines = list(map(lambda line: line.replace(url, original_url), lines))
-
-  with open(filename, 'w') as f:
-    f.writelines(lines)
-
+  subprocess.run(["git", "remote", "remove", "origin"])
+  subprocess.run(["git", "remote", "add", "origin", original_url])
 
 def main():
   args = sys.argv[1:]
@@ -86,7 +87,8 @@ def main():
     clone(args)
 
     # restore
-    restore(replaced_url, github_repo_url)
+    repo_dir = get_repo_dir(args, replaced_url)
+    restore(repo_dir, github_repo_url)
   else:
     clone(args)
 
