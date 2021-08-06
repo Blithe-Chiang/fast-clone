@@ -74,11 +74,11 @@ def main():
   if github_repo_url:
     idx = args.index(github_repo_url)
     replaced_url = change_source(github_repo_url)
-    args = args[:idx] +  [replaced_url]  + args[idx+1:]
+    args = args[:idx] + [replaced_url] + args[idx+1:]
 
     clone(args)
 
-    # restore
+    # restore the original url
     repo_dir = get_repo_dir(args, replaced_url)
     restore(repo_dir, github_repo_url)
   else:
