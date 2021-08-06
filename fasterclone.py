@@ -42,18 +42,10 @@ def clone(args):
   if proc.returncode != 0:
     exit(CLONE_FAILED)
 
-def get_repo_dir(args, url):
+def get_repo_dir(url):
   # get repo name
   # e.g. parse `breakfast` from  https://github.com/Blithe-Chiang/breakfast.git 
   repo_dir = url[url.rindex('/')+1:-4] # default 
-  idx = args.index(url)
-
-  try:
-    # from git-clone manual
-    # syntax: git clone <repository> [<directory>]
-    repo_dir = args[idx+1] # try to get specified directory
-  except IndexError:
-    pass
 
   return repo_dir
 
@@ -71,18 +63,27 @@ def main():
 
   github_repo_url = get_github_repo_rul(args)
 
-  if github_repo_url:
-    idx = args.index(github_repo_url)
-    replaced_url = change_source(github_repo_url)
-    args = args[:idx] + [replaced_url] + args[idx+1:]
-
+  # do not change source because this is not a github repo
+  if not github_repo_url:
     clone(args)
+    exit(0)
 
-    # restore the original url
-    repo_dir = get_repo_dir(args, replaced_url)
-    restore(repo_dir, github_repo_url)
-  else:
-    clone(args)
+  # change source
+  idx = args.index(github_repo_url)
+  replaced_url = change_source(github_repo_url)
+  args = args[:idx] + [replaced_url] + args[idx+1:]
+
+  clone(args)
+
+  # restore the original url
+  try:
+    # from git-clone manual
+    # syntax: git clone <repository> [<directory>]
+    repo_dir = args[idx+1] # try to get specified directory
+  except IndexError:
+    repo_dir = get_repo_dir(github_repo_url)
+
+  restore(repo_dir, github_repo_url)
 
 if __name__ == '__main__':
   main()
