@@ -28,29 +28,26 @@ how:
 def usage():
   print(USAGE_STR)
 
-# get repo url from args
-def get_repo_url():
+def get_github_repo_rul(args):
+  github_repo_url = ''
+  github_repo_urls = [x for x in args if x.startswith('https://github.com/') and x.endswith('.git')]
   try:
-    github_repo_url = sys.argv[1]
+    github_repo_url = github_repo_urls[0]
   except IndexError:
-    usage()
-    exit(NO_URL_PROVIDED)
+    pass
   return github_repo_url
 
-# get replaced url 
-def get_replaced_url(github_repo_url):
-  if 'https://github.com' in github_repo_url:
-    replaced_repo_url = github_repo_url.replace('github.com', 'github.com.cnpmjs.org')
-  else:
-    print('github repo url format error')
-    exit(URL_FORMAT_ERROR)
+# change source
+def change_source(github_repo_url):
+  replaced_repo_url = github_repo_url.replace('github.com', 'github.com.cnpmjs.org')
   return replaced_repo_url
 
 # perform clone 
-def clone(url):
-  ret = subprocess.run(["git", "clone", url])
+def clone(args):
 
-  if ret.returncode != 0:
+  proc = subprocess.run(["git", "clone", *args])
+
+  if proc.returncode != 0:
     exit(CLONE_FAILED)
 
 # restore original url in .git/config file
@@ -61,6 +58,8 @@ def restore(url, original_url):
 
   if not os.path.isdir(repo_dir):
     exit(REPO_NOT_EXISTS)
+
+  print('restoring...')
 
   filename = f'{repo_dir}/.git/config'
 
@@ -75,12 +74,21 @@ def restore(url, original_url):
 
 
 def main():
-  repo_url = get_repo_url()
-  replaced_url = get_replaced_url(repo_url)
-  clone(replaced_url)
+  args = sys.argv[1:]
 
-  print('restoring...')
-  restore(replaced_url, repo_url)
+  github_repo_url = get_github_repo_rul(args)
+
+  if github_repo_url:
+    idx = args.index(github_repo_url)
+    replaced_url = change_source(github_repo_url)
+    args = args[:idx] +  [replaced_url]  + args[idx+1:]
+
+    clone(args)
+
+    # restore
+    restore(replaced_url, github_repo_url)
+  else:
+    clone(args)
 
 if __name__ == '__main__':
   main()
