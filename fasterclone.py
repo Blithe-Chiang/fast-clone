@@ -9,16 +9,6 @@ URL_FORMAT_ERROR = 2
 CLONE_FAILED = 3
 REPO_NOT_EXISTS = 4
 
-USAGE_STR = """
-fasterclone 
-=================
-usage: 
-  fasterclone <github-repo-url>
-  
-"""
-
-def usage():
-  print(USAGE_STR)
 
 def get_github_repo_rul(args):
   github_repo_url = ''
